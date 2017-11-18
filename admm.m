@@ -25,19 +25,25 @@ y1 = repmat(y,1,r);
 curr_best = 999;
 
 for i = 1 : iter
-    B = updateB(X,y1,B,Z1,Z2,Z3,U1,U2,U3); 
-    Z1 = updateZ1(X,y1,B,Z1,Z2,Z3,U1,U2,U3,A,rho); 
-    Z2 = updateZ2(X,y1,B,Z1,Z2,Z3,U1,U2,U3,A,D);
-    Z3 = updateZ3(X,y1,B,Z1,Z2,Z3,U1,U2,U3,A,D,rho);
+    B =  updateB(X,y1,Z1,Z2,U1,U2); 
+    Z1 = updateZ1(X,y1,B,Z1,U1,A,rho); 
+    Z2 = updateZ2(X,B,Z2,Z3,U2,U3,D);
+    Z3 = updateZ3(Z2,Z3,U3,D);
     U1 = U1 + y1-X*B-Z1;
     U2 = U2 + X*B-Z2;
-    U3 = U3+Z2*D'-Z3;
-    g = 0;  
-    
+    U3 = U3 + Z2*D'-Z3;
     val(i) = obj_val(Z1,A);
     if (val(i) < curr_best)
-        curr_best =val(i);
+        curr_best = val(i);
     end
 end
-fprintf('Best objective: %f', curr_best);
+fprintf('Best objective: %f\n', curr_best);
 plot(val)
+
+figure
+plot(X(:,1),y,'b.','MarkerSize',10)
+hold on;
+x_pt = [min(X(:,1)),max(X(:,1))];
+plot(x_pt,[-B(1,1)+B(2,1);B(1,1)+B(2,1)],'r-','LineWidth',2);
+plot(x_pt,[-B(1,2)+B(2,2);B(1,2)+B(2,2)],'k-','LineWidth',2);
+plot(x_pt,[-B(1,3)+B(2,3);B(1,3)+B(2,3)],'g-','LineWidth',2);
