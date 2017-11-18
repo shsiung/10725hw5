@@ -1,4 +1,5 @@
 clear;
+close all;
 %% Reading in data
 X = csvread('X.csv');
 y = csvread('y.csv');
@@ -7,10 +8,10 @@ y = csvread('y.csv');
 rho = 1;
 iter = 50;
 A = [0.1,0.5,0.9]';
-
 n = size(X,1);
 p = size(X,2);
 r = length(A);
+y1 = repmat(y,1,r);
 
 Z1 = zeros(n,r);
 Z2 = zeros(n,r);
@@ -21,10 +22,13 @@ U2 = zeros(n,r);
 U3 = zeros(n,r-1);
 D = [-1, 1, 0;
      0, -1, 1];
-y1 = repmat(y,1,r);
 curr_best = 999;
 
 for i = 1 : iter
+    val(i) = obj_val(y1-X*B,A);
+    if (val(i) < curr_best)
+        curr_best = val(i);
+    end
     B =  updateB(X,y1,Z1,Z2,U1,U2); 
     Z1 = updateZ1(X,y1,B,Z1,U1,A,rho); 
     Z2 = updateZ2(X,B,Z2,Z3,U2,U3,D);
@@ -32,10 +36,6 @@ for i = 1 : iter
     U1 = U1 + y1-X*B-Z1;
     U2 = U2 + X*B-Z2;
     U3 = U3 + Z2*D'-Z3;
-    val(i) = obj_val(Z1,A);
-    if (val(i) < curr_best)
-        curr_best = val(i);
-    end
 end
 fprintf('Best objective: %f\n', curr_best);
 plot(val)

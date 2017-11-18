@@ -13,17 +13,3 @@ function [ Z1new ] = updateZ1(X,y1,B,Z1,U1,A,rho)
         end
     end
 end 
-% 
-%   V = Y - X*B + U1;
-%     for j = 1:r;
-%         a = A(j);
-%         for i = 1:n
-%             if (V(i, j) > a/rho)
-%                 Z1(i, j) = V(i, j) - a/rho;
-%             elseif (V(i, j) < (a-1)/rho)
-%                 Z1(i, j) = V(i, j) - (a-1)/rho;
-%             elseif ( V(i, j) >= (a-1)/rho && V(i, j) <= a/rho )
-%                 Z1(i, j) = 0;
-%             end
-%         end
-%     end
